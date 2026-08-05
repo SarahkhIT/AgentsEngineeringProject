@@ -1,4 +1,4 @@
-# Solar Farm AI
+# Solar Farm 
 
 An agentic AI system that manages a solar power plant end-to-end — detecting faulty panels, forecasting energy production, monitoring weather, and recommending maintenance — built on a LangGraph state-graph workflow with real tool calling and multi-agent coordination.
 
@@ -12,7 +12,7 @@ Trainer: Mohammed Albeladi
 - Rehaf Ismail Alfaleh
 - Sarah Abdulaziz Alkhudhiri
 - Raneem Abdullah Alsheddi
-- Hajer Almejel
+- Hajer Adel Almejel
 
 *Role assignments below follow the rubric-based split the team agreed on — confirm/adjust the names against each role before submitting.*
 
