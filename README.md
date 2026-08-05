@@ -135,7 +135,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 6. Run the retry-evidence cell to confirm the confidence-based retry logic fires under a forced low-confidence scenario.
 7. For a fully clean verification, use Runtime → Restart session and run all to confirm the notebook runs end-to-end with no leftover session state.
 
-## Note on notebook structure: 
+## Note on Notebook Structure
 
 This project is split into five notebooks (notebooks/01–05), each covering one capstone deliverable, so the commit history reflects incremental development rather than a single bulk upload. The notebooks are sequentially dependent — 02 relies on definitions from 01, 03 relies on 02, and 04 relies on 01 and 02 — so for a full end-to-end run, execute them in order (01 → 02 → 03 → 04) within the same kernel session. Each notebook's opening cell states exactly what it depends on from the ones before it. 03 includes a fallback so it won't error if run standalone, but will use sample data instead of a real pipeline run in that case. 05 contains documentation only and has no dependencies.
 
