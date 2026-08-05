@@ -1,4 +1,4 @@
-# Solar Farm 
+# Solar Farm
 
 An agentic AI system that manages a solar power plant end-to-end — detecting faulty panels, forecasting energy production, monitoring weather, and recommending maintenance — built on a LangGraph state-graph workflow with real tool calling and multi-agent coordination.
 
@@ -15,7 +15,6 @@ Session Dates: August 2nd, 2026 - August 6th, 2026
 - Sarah Abdulaziz Alkhudhiri
 - Raneem Abdullah Alsheddi
 - Hajer Adel Almejel
-
 
 ## Overview
 
@@ -44,6 +43,7 @@ Solar Farm AI continuously assesses the health and output of a solar power plant
 - SQLite / Redis *(Production Readiness — persistence)*
 - Docker / docker-compose *(Production Readiness — deployment artifact)*
 - Gradio *(dashboard/demo — Security & Documentation team)*
+<!-- TODO: confirm Gradio/Redis artifacts are actually in the repo before submitting -->
 - LangSmith or equivalent *(observability — Security & Documentation team)*
 - GitHub
 
@@ -89,7 +89,6 @@ Review Agent             (Reflexion — critiques report for inconsistencies)
 - Conditional edge after panel analysis: routes to the Maintenance agent if any panel group is flagged as faulty, otherwise proceeds directly to energy forecasting.
 - Conditional edge after energy forecasting: if the forecast's confidence score falls below threshold, loops back to re-run the Energy Prediction agent (capped at 3 attempts) before continuing.
 
-
 ## Prerequisites & Installation
 
 - Python 3.10+
@@ -127,17 +126,25 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 ## How to Run
 
-1. Open the notebook in Google Colab.
-2. Run the setup/pip-install cell first.
-3. Run the state schema, node function, and tool function cells in order.
-4. Run the graph-build cell to compile the LangGraph `StateGraph`.
-5. Run the main invocation cell (`app.invoke(...)`) to execute a full pass — this produces the final report and prints each agent's Thought/Action/Observation trace.
-6. Run the retry-evidence cell to confirm the confidence-based retry logic fires under a forced low-confidence scenario.
-7. For a fully clean verification, use Runtime → Restart session and run all to confirm the notebook runs end-to-end with no leftover session state.
+This project is split into five notebooks under `notebooks/`, each covering one capstone deliverable. Run them in order, in the same Colab/Jupyter session:
+
+1. Open `notebooks/01_agentic_reasoning_and_tools.ipynb` and run all cells.
+   Defines the shared state schema, the real tools (weather, fault detection, energy forecasting, maintenance recommendations), and the ReAct tool-calling agents.
+2. Open `notebooks/02_graph_orchestration_and_hitl.ipynb` in the same session and run all cells.
+   Compiles and invokes the LangGraph `StateGraph`, including the conditional branching, the retry loop, the SQLite checkpointer, and the human-in-the-loop approval step.
+3. Open `notebooks/03_production_persistence_and_deployment.ipynb` and run all cells.
+   Persists reports to SQLite, stands up the FastAPI backend, and generates the `requirements.txt` / `Dockerfile` / `docker-compose.yml` deployment artifacts.
+4. Open `notebooks/04_security_guardrails_observability.ipynb` and run all cells.
+   Runs the input/output guardrails against a real attack attempt and wires the guardrail into a secured entry point on the graph.
+5. `notebooks/05_architecture_and_documentation.ipynb` is documentation only — no code to run.
+
+**Expected output:** each agent prints its Thought → Action → Observation trace as it runs; the pipeline produces a final report (weather, panel status, forecast, maintenance recommendation) and pauses at the human-approval step until it receives `Command(resume=True)`; the retry-loop and security cells print evidence of the loop firing and an attack being blocked, respectively.
+
+For a fully clean verification, use Runtime → Restart session and re-run notebooks `01` → `04` in order to confirm the project runs end-to-end with no leftover session state.
 
 ## Note on Notebook Structure
 
-This project is split into five notebooks (notebooks/01–05), each covering one capstone deliverable, so the commit history reflects incremental development rather than a single bulk upload. The notebooks are sequentially dependent — 02 relies on definitions from 01, 03 relies on 02, and 04 relies on 01 and 02 — so for a full end-to-end run, execute them in order (01 → 02 → 03 → 04) within the same kernel session. Each notebook's opening cell states exactly what it depends on from the ones before it. 03 includes a fallback so it won't error if run standalone, but will use sample data instead of a real pipeline run in that case. 05 contains documentation only and has no dependencies.
+This project is split into five notebooks (`notebooks/01`–`05`), each covering one capstone deliverable, so the commit history reflects incremental development rather than a single bulk upload. The notebooks are sequentially dependent — `02` relies on definitions from `01`, `03` relies on `02`, and `04` relies on `01` and `02` — so for a full end-to-end run, execute them in order (`01` → `02` → `03` → `04`) within the same kernel session. Each notebook's opening cell states exactly what it depends on from the ones before it. `03` includes a fallback so it won't error if run standalone, but will use sample data instead of a real pipeline run in that case. `05` contains documentation only and has no dependencies.
 
 ## References
 
