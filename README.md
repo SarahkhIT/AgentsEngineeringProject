@@ -102,8 +102,10 @@ Review Agent             (Reflexion — critiques report for inconsistencies)
 Install required libraries:
 
 ```bash
-pip install -q langgraph langchain langchain-openai requests
+pip install -q langgraph langchain langchain-openai langgraph-checkpoint-sqlite requests
 ```
+
+Notebook `03` additionally installs `fastapi uvicorn nest-asyncio pyngrok` in its own setup cell.
 
 ## Configuration & Secrets
 
