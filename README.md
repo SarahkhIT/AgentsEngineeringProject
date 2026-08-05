@@ -107,6 +107,21 @@ pip install -q langgraph langchain langchain-openai langgraph-checkpoint-sqlite 
 
 Notebook `03` additionally installs `fastapi uvicorn nest-asyncio pyngrok` in its own setup cell.
 
+## Key Components
+
+| Component | Where | Responsibility |
+|---|---|---|
+| `SolarState` / `SecuredSolarState` | `notebooks/01`, `04` | Shared TypedDict state passed between every node |
+| Tool functions (`get_weather`, `detect_faults`, `predict_energy`, `recommend_maintenance`) | `notebooks/01` | Real computation each agent calls — no hardcoded outputs |
+| `ToolCallingAgent` | `notebooks/01` | Wraps a tool call in the ReAct Thought → Action → Observation loop |
+| Planner / Weather / Panel / Energy / Maintenance / Aggregator / Review nodes | `notebooks/01`, `02` | The specialized agents, each a node in the `StateGraph` |
+| `StateGraph` build + conditional edges + retry loop | `notebooks/02` | Orchestration: routing, branching, capped retry |
+| `SqliteSaver` checkpointer + `human_approval_node` | `notebooks/02` | Persistence across restarts + human-in-the-loop pause/resume |
+| Report DB + `update_approval` + FastAPI backend | `notebooks/03` | Report persistence and the API surface for reports/approval |
+| `Dockerfile` / `docker-compose.yml` / `requirements.txt` / `api.py` | `notebooks/03` | Cloud-deployment artifacts |
+| `ThreatDetectionAgent` / `ResponseSanitizationAgent` / `security_node` | `notebooks/04` | Input guardrail, output guardrail, and the guardrail wired into the graph entry point |
+| `security_logs` / `run_monitored_tool` | `notebooks/04` | Structured observability logging of guardrail decisions and tool calls |
+
 ## Configuration & Secrets
 
 If using an LLM provider for the Planner or Review agents, store the key via Colab Secrets:
