@@ -5,6 +5,7 @@ An agentic AI system that manages a solar power plant end-to-end — detecting f
 ## Program
 
 Developed as part of the **"Advanced Agentic AI Systems Engineering"** program by SDAIA Academy.
+Session Dates: August 2nd, 2026 = August 6th, 2026
 
 Trainer: Mohammed Albeladi
 
