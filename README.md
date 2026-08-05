@@ -39,12 +39,10 @@ Solar Farm AI continuously assesses the health and output of a solar power plant
 - Google Colab (primary development environment)
 - LangGraph (StateGraph orchestration)
 - Requests (Open-Meteo weather API)
-- FastAPI *(Production Readiness — backend/persistence team)*
-- SQLite / Redis *(Production Readiness — persistence)*
+- FastAPI *(Production Readiness — backend/persistence)*
+- SQLite *(Production Readiness — persistence: report DB + LangGraph checkpointer)*
 - Docker / docker-compose *(Production Readiness — deployment artifact)*
-- Gradio *(dashboard/demo — Security & Documentation team)*
-<!-- TODO: confirm Gradio/Redis artifacts are actually in the repo before submitting -->
-- LangSmith or equivalent *(observability — Security & Documentation team)*
+- Structured JSON logging *(Security & Observability — guardrail decisions, tool-call latency)*
 - GitHub
 
 ## Architecture
@@ -77,11 +75,11 @@ Review Agent             (Reflexion — critiques report for inconsistencies)
 ```
 
 **Reasoning patterns implemented:**
-- **Plan-and-Execute** — the Planner agent breaks the task into an ordered plan before execution begins.
-- **ReAct** — each tool-calling agent (Weather, Panel Analysis, Energy Prediction, Maintenance) wraps its tool call in an explicit Thought → Action → Observation loop with short-term memory of its own steps.
-- **Reflexion / self-critique** — the Review agent inspects the final report for inconsistencies (e.g. a maintenance flag paired with a low-confidence forecast) before the workflow ends.
+- **ReAct** (fully implemented) — each tool-calling agent (Weather, Panel Analysis, Energy Prediction, Maintenance) wraps its tool call in an explicit Thought → Action → Observation loop with short-term memory of its own steps, over real tool calls (not hardcoded outputs).
+- **Plan-and-Execute** — the Planner agent decomposes the task into an ordered plan before execution begins. Currently a fixed plan (stubbed rather than LLM-driven); structured so an LLM call can be swapped in without changing the graph.
+- **Reflexion / self-critique** — the Review agent applies rule-based critique logic to flag inconsistencies (e.g. a maintenance flag paired with a low-confidence forecast) before the workflow ends. Currently rule-based rather than LLM-driven; structured the same way for an LLM swap-in later.
 
-**State**: A shared `SolarState` (TypedDict) flows through every node — each node reads relevant fields and writes its results back, rather than agents passing isolated prompts to each other.
+**Nodes & state**: Every agent above (Planner, Weather, Panel Analysis, Energy Prediction, Maintenance, Aggregator, Review) is implemented as a **node** in the LangGraph `StateGraph`. A shared `SolarState` (TypedDict) flows through every node — each node reads relevant fields and writes its results back, rather than agents passing isolated prompts to each other.
 
 **Coordination strategy**: Centralized/coordinator — the graph itself, entered through the Planner, sequences and routes every other agent. There is no peer-to-peer negotiation between agents.
 
