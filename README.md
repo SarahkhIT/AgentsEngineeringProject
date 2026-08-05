@@ -32,6 +32,12 @@ Solar Farm AI continuously assesses the health and output of a solar power plant
 - Conditional retry loop on low-confidence forecasts, with a capped retry count
 - Reflexion-style self-critique of the final report before completion
 - Short-term memory carried across each agent's reasoning steps
+- Input guardrail that detects and blocks prompt-injection, jailbreak, and credential-extraction attempts before they reach any agent
+- Output guardrail that masks emails, phone numbers, API keys, and passwords in generated responses
+- Structured JSON observability logging of every guardrail decision and tool call, including latency
+- Persistent checkpointing (SQLite) so graph state survives a restart
+- Human-in-the-loop approval step that pauses the graph and resumes on a real human decision
+- Cloud-deployment artifacts (FastAPI backend, Dockerfile, docker-compose.yml) — not just a claim of being "cloud-ready"
 
 ## Tech Stack
 
