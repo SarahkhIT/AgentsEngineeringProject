@@ -14,7 +14,6 @@ Trainer: Mohammed Albeladi
 - Raneem Abdullah Alsheddi
 - Hajer Adel Almejel
 
-*Role assignments below follow the rubric-based split the team agreed on — confirm/adjust the names against each role before submitting.*
 
 ## Overview
 
